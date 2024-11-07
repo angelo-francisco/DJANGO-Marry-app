@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "django-marry-app"
+version = "0.1.0"
+description = ""
+authors = ["angelo-francisco <ics20080729@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.1.2"
+pillow = "^11.0.0"
+python-decouple = "^3.8"
+taskipy = "^1.14.0"
+
+[tool.taskipy.tasks]
+run = 'python manage.py runserver'
+mkmg = 'python manage.py makemigrations'
+mg = 'python manage.py migrate'
+app = 'python manage.py startapp'
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

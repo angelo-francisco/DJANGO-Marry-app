@@ -1,0 +1,138 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %}
+
+
+{% endblock %}
+
+{% block 'body' %}
+{% include "partials/navbar.html" %}
+<div class="max-w-7xl mx-auto mt-12">
+    <div class="grid grid-cols-2 gap-4">
+        <div class="bg-slate-200/20 p-6 rounded-md">
+
+            <h2 class="text-balance text-xl font-semibold tracking-tight text-gray-900">Crie sua lista de presentes</h2>
+            <br>
+            <form action="{% url 'home' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label class="mt-4 block text-sm leading-6 text-gray-900">Nome do presente</label>
+                {{form.name}}
+
+                <div class="flex space-x-4">
+                    <div class="w-full">
+                        <label class="mt-4 block text-sm leading-6 text-gray-900">Foto de exemplo</label>
+                        {{form.photo}}
+                    </div>
+
+                    <div class="w-full">
+                        <label class="mt-4 block text-sm leading-6 text-gray-900">Preço estimado</label>
+                        {{form.price}}
+                    </div>
+
+
+                </div>
+
+                <div class="flex space-x-4">
+
+                    <div class="w-full">
+                        <label class="mt-4 block text-sm leading-6 text-gray-900">importancia</label>
+                        {{form.importance}}
+                    </div>
+
+                    <div class="w-full">
+                        <input type="submit"
+                            class="rounded-md w-full mt-4 bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+                            value="Criar presente">
+                    </div>
+
+                </div>
+
+
+            </form>
+        </div>
+        <div class="mx-auto">
+
+            <canvas id="myChart" class=""></canvas>
+
+        </div>
+
+    </div>
+
+    <div class="grid grid-cols-5 mt-4 gap-4">
+
+        {% for gift in gifts %}
+
+
+        <div>
+            <img class="aspect-[3/2] w-full rounded-2xl object-cover" src="{{gift.photo.url}}"
+                alt="{{gitf.name}}-photo">
+            <h3 class="mt-2 text-lg font-semibold leading-8 text-gray-900">{{ git.name }}</h3>
+
+            {% if gift.reservated %}
+            <p class="mt-4 block text-sm leading-6 text-gray-900">Reservado por {{gift.reservated_by.guest}}</p>
+            {% endif %}
+            <p class="text-base leading-7 text-gray-600"></p>
+
+
+            {% if gift.importance <= 2%} <span
+                class="inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-inset ring-green-400/30">
+                Pouco importante <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="size-4 text-green-400">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                </span>
+                {% elif gift.importance < 4 %} <span
+                    class="inline-flex items-center rounded-md bg-orange-400/10 px-2 py-1 text-xs font-medium text-orange-400 ring-1 ring-inset ring-orange-400/30">
+                    Importante <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor" class="size-4 text-orange-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                    </span>
+                    {% else %}
+                    <span
+                        class="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/30">Muito
+                        importante <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="size-4 text-red-400">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </span>
+                    {% endif %}
+
+        </div>
+        {% endfor %}
+
+
+
+
+
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Não reservado', 'Reservado'],
+            datasets: [{
+                label: 'Presentes',
+                data: [parseInt('{{not_reservated}}'), parseInt('{{reservated}}')],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+
+{% endblock %}
